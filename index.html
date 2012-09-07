@@ -1,0 +1,510 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <style type="text/css">
+      body
+      {
+      background: url("prweb-sidebar.png") top left fixed no-repeat;
+      font-family: sans-serif;
+      line-height: 140%;
+      font-size: 90%;
+      }
+      
+      a img
+      {
+      border-style: none;
+      text-decoration: none;
+      vertical-align: middle;
+      }
+      
+      h1 { margin: 1em 0 1em 5%; width: 80%; font-size: 160%; line-height: normal;}
+      small {margin: .5em 0 0 5%; font-size: 80%; position: relative; display: block;}
+      h3 { margin-top: 2em; font-size: 100%; }
+      h2 { margin-top: 1em; font-size: 120%; }
+      
+      /* layout */
+      .host
+      {
+      position: absolute;
+      right: 1em;
+      top: 2em;
+      width: 25em;
+      text-align: center;
+      font-size: 80%;
+      font-weight: bold;
+      }
+      
+      .host a { text-decoration: none; }
+      
+      div.left
+      {
+      float: left;
+      width: 39%;
+      margin: 0 1% 0 5%;
+      }
+      div.right
+      {
+      float: right;
+      width: 53%;
+      margin-left: 2%;
+      }
+      
+      /* footer */
+      #ft
+      {
+      clear: both;
+      display: block;
+      padding: 1em;
+      margin-left: -5%;
+      font-size: 80%;
+      text-align: center;
+      }
+
+      #fad
+      {
+      height: 250px; overflow: hidden;
+      line-height: 120%; font-size: 80%;
+      }
+
+  </style>
+    
+
+
+  <body>
+    <br>
+    <h1>Re-expression method</h1>
+    <div class="left">
+      <p><i>
+	  This article re-defines problem setting for artifical learning
+	  in order to unite various disciplines of algorithmic learning under
+	  same domain. It also introduces a high performing solution to this 
+	  very problem, that can beat machine learning algorithms on their 
+	  home field. 
+      </i></p>
+      <h2>The grand question</h2>
+      <p>
+	How to make algorithmic learning more generic and powerful? We have 
+	plently of algorithms, but they tend to lack the single quality we 
+	so preciate in the human brain: the ability to manage the 
+	widest variety of problems in a generic and effective way.
+	So how to devise a more generic learning method, and how to keep it
+	high performing and powerful?
+      </p>
+      <h2>The re-expression problem</h2>
+      <p>
+	Problems define solutions and to be able
+	to define more generic algorithm you need to first define more generic 
+	problem. Also, there's need to change the approach with problem settings
+	entirely, as the primary aim will not be to classify anything, or 
+	predict anything, detect patterns or compress anything, but instead 
+	find a generic method, that unifies these aims.
+      </p>
+      <p>
+	Instead, the new grander problem is in finding optimal mechanism for
+	transforming information I into new improved expression I' that contains 
+	the same information. As a side-effect a number of operations on the 
+	data should become 1) trivial 2) fast and 3) more effective. Here 
+	effectiveness means that probability estimation provides better 
+	estimates, compression provides better compression rates, 
+	classifier better classifications and so forth. 
+      </p>
+      <p>
+	Now the grand question is what the idea of ideal expression actually 
+	means, what are the very desirable qualities of ideal expression, and is
+	such expression even possible to achieve? Regarding the desired qualities -
+	based on Rissanen minimum entropy principle - the information/model should
+	have minimized entropy. Another desired quality is maximum independence of 
+	the variables in the information expression, as under independence
+	assumption simplistic compression and naive Bayesian methods do provide 
+	ideal compression rates and estimates with ideal performance. Even 
+	further, the two qualities around entropy and independence can be 
+	optimized via minimizing a single metric called 'naive entropy, which is
+	the sum of expression's variables' entropies' H_n(I) = H(V_1) + H(V_2) +
+	... . Minimizing the naive entropy minimizes entropy of the
+	compressed model, while the naive entropy reaches true entropy only, if
+	variables reach independence. 
+      </p>
+      <h2>The abstract solution</h2>
+      <p>
+	If we split information I into two parts, which are language L and 
+	data so that I = (L, D), we can reframe the problem as finding
+	optimal language learner l, so that it provide optimal language 
+	L' = l(L, D) and that the new optimal expression I' = (L', D') has 
+	minimized naive entropy H_n(I') = H_n(L') + H_n(D'). 
+      <p> 
+	The abstract solution is following:
+      </p>
+      <ol>
+	<li>Assume independence assumption</li>
+	<li>Find a condition C in data that is suprisingly common</li>
+	<li>Form a expression variable E that's true when condition C is true</li>
+	<li>Add expression variable E into expression. This introduce redundancy, as variable E predicts unambigiously existing variables' states</li>
+	<li>Eliminate the redundancy by eliminating predicted states from expression. This creates new generation of information I_i+1.</li>
+	<li>Repeat the process from step 1. for I_i+1</li>
+      </ol>
+      <p> 
+	As patterns are eliminated from data they get captured in the language,
+	and the data that once described pixels, letters or variable states 
+	becomes data describing also shapes, words, phrases, classes and 
+	other patterns. 
+      <h2>The implemented solution</h2>
+      <p>
+	This abstract solution can be specialized in a number of different 
+	ways. The C++ implementation has following specifics: 
+      </p>
+      <p>
+	(Warning, following information is both dense & complex. I put it here mainly to demonstrate that a solution exists)
+      </p>
+      <ul>
+	<li>All variables and states are binary (e.g. isPixelBlack)</li>
+	<li>Variables are iterated via context variables, that are vectors of integers, and variables have state for each defined context. <ul><li>E.g. context variable Pixel has states (0, 1), (0, 2), ..., (99, 99) and e.g. isPixelBlack((10,10))=true. </li></ul></li>
+	<li>Relations R_1, R_2, ..., R_m are used to organize variables and to detect patterns. Relations are of form R(t) = (V_i(t + s_i), V_j(t + s_j), ...,  V_k(t + s_k)), where t is context variable state and s_i, ..., s_k are shift vectors, that translate context variable. <ul><li>E.g. leftRight(t) = (isPixelBlack(t), isPixelBlack(t + (1,0))) could have value leftRight((10, 10)) = (isPixelBlack((10, 10)), isPixelBlack((11, 10))) = (true, true). </li></ul></li>
+	<li>
+	  Statistics are gathered per variable and per relation, and they are used to estimate probabilities and statistical dependencies. 
+	  <ul>
+	    <li>We may have image data of dimensions (100, 100) and so separate statistics based on the 10000 isPixelBlack variable states and based on 9900 leftRight states. </li>
+	    <li>Statistics may provide e.g. following probabilities for each 4 relation leftRight states: p(leftRight = (true, true))=0.4 and p(leftRight = (false, false)) = 0.5, while other states are present only 10% of time.</li></ul>
+	</li>
+	<li>
+	  For each of the relationship's R state r = (v_1, v_2, ..., v_n), we calculate metric called bias B(r) = n(log (p(v_1) p(v_2) ... p(v_3)) - log p(r)), which is used to detect patterns that break independence assumption.
+	</li>
+	<li>
+	  We scan all relationships' R_1, R_2, ..., R_n states' r_1, r_2, ..., r_m bias values, and pick the relationship R_i state r_j with highest bias B(r_i) as the pattern to eliminate via new expression variable E.
+	<ul>
+	  <li>If the highest variable has bias under some threshold T, the process is stopped. </li>
+	  <li>For the expression variable E it applies that E(t) = true, iff R_i(t) = r_j. E.g. we may have expression variable E(t) that is true, iff leftRight(t)=(true, true)	
+	  </li>
+	</ul>
+	</li>
+	<li>
+	  Introducing E to the information I will also introduce redundancy to the information. This redundancy can be removed by 'eliminating' variable states that can be implictly determined based on following rules: 
+	<ul>
+	  <li>The expression rule. E.g. if E((2, 2))=true, then we know that isPixelBlack((2, 2)) and isPixelBlack((3, 2)) must be both true and they can be eliminated, assuming E(t) = isBlackPixel(t)=true AND isBlackPixel(t+(1,0)).
+	  </li>  
+	  <li>The expressed state rule. E.g. if E((4, 2))=false, while isPixelBlack((5, 2)) is true, then isPixelBlack((4, 2)) must be false. 
+	  </li> 
+	  <li>The expression exclusion rule. E.g. if we have expression D(t) <-> upDown(t) = (true, true), and we know E((2, 2)) = true, then we know D((2, 2)), D((2, 1)), D((3, 2)) and D((3, 1)) to be false.
+	  </li>  
+	</ul>
+	  <li>The elimination process is called 'variable reduction process' and it creates variables, which states are eliminated in some contexts and which have different statistical properties than their original versions. The eliminated states are ignored, when building statistics, compressing, classifying or predicting as they are already taken into account via expression variable E. 
+	    <ul><li>E.g. Reduced isPixelBlack is different from original isPixelBlack as it has fewer states and relatively fewer of these states are true</li></ul>  </li>
+	</ul>
+      <p>
+	The C++ implementation has also naive Bayesian probability predicter
+	implemented. Once you define data sets and test data, you can use
+	pred::p() method for estimating probabilities for missing variable. 
+	A naive compressor that compresses the re-expressed data is 
+	also implemented, but unfortunately only for an earlier Java version. 
+	Still; the Java compressor using arithmetic encoding did work exactly
+	as predicted compressing the data in naive entropy + epsilon bits, 
+	where epsilon was relatively in fourth or fifth decimal. Re-expression
+	improved naive compressor's results as indented; here you have to 
+	trust my word, where as the way how naive Bayesian predicting is
+	improved by re-expression is shown on and the results can be reproduced 
+	by running the test cases. 
+      </p>
+      <h2>Considerations</h2>
+      <p>
+	The nice thing in the C++ implementation is that because context 
+	variables and shifts are vectors and all states are binary, it can
+	be hugely optimized with fast bit AND, NOT and POPCOUNT operations. 
+	Other very nice aspects are that it provides very good results in
+	classification problems, it provides more or less proper probability 
+	estimates, and it is very generic when compared with other existing 
+	algorithms.	
+      </p>
+      <p>
+	Still, the solution could be improved in many curious ways. First of 
+	all, by varying the way how the original expression of information is 
+	defined, you can cover either small set of problems (machine learning, 
+	languages), a big set (current solution) or even a bigger range of problem
+	settings, what-ever they may be. This is one level of problem, 
+	the low-level information representation. Another level relates relations
+	and expressions or what patterns we can express and how. Current 
+	mechanism can only express AND relation between variable states, while 
+	OR-like expression is obviously possible. It also seems plausible that 
+	some kind of recusion could be learned, where recursion is needed for 
+	learning context-free-grammars. One can imagine what context-free-grammars
+	would look like for e.g. images or video. Still, for the re-expression 
+	to actually reduce naive entropy of information, one needs to have 
+	statistics to detect the patterns and devise a bullet-proff reduction 
+	mechanisms for given expression. Statistics and reduction thus 
+	form third and fourth levels of re-expression problem. Fifth level of
+	the problem relate to optimizations, like sparse data optimization, which 
+	could take the algorithm speed even to another level. The last level 
+	of the problem relate to how statistics are used for probability 
+	estimation. While re-expression allows simplistic operations to 
+	perform well with data, even these simplistic operations could be 
+	improved by developing the mathematics behind the operations.
+      </p>
+      <h2>About Author</h2>
+      <p>
+	Antti Rauhala is a software engineer at Futurice with a passion 
+	for artificial intelligence and machine learning. He's also 
+	the author of <a href="http://freeformlang.sourceforge.net">FreeForm meta 
+	language</a>.
+      </p>
+    </div>
+    <div class="right">
+      <h2>Results</h2>
+      <p>The results are for the optimized C++ library providing an 
+ 	 implementation of the re-expression method and all results
+	 can be reproduced by running the corresponding test case from the 
+	 unit tests. The sources and instructions on building and running 
+	 unit tests can be found from here.</p>
+      <h2>Machine learning samples from StatLog (statlogbits test suite)</h2>
+      <p>StatLog was the comprehensive evaluation of supervised learning from
+	90s, where 23 methods (including statistical methods, machine learners
+	and neural networks) were evaluated with 29 cases of real world data. 
+	Four (4) StatLog data sets were used for testing and comparing 
+	re-expression technique against other algorithms:
+      </p>
+      <table width="100%">
+	<tr><td><b>Data-set</b></td>
+	    <td><b>Statlog Rank</b></td>
+	    <td><b>Result</b></td>
+	    <td><b>Statlog's Best</b></td></tr>
+	<tr>
+	  <td>German credit data</td>
+	  <td>1.</td>
+	  <td>.510</td>
+	  <td>.541 (Discrim)</td>
+	</tr>
+	<tr>
+	  <td>Australian credit data</td>
+	  <td>1.</td>
+	  <td>.128</td>
+	  <td>.131 (Cal5)</td>
+	</tr>
+	<tr>
+	  <td>Heart disease</td>
+	  <td>1.</td>
+	  <td>.344</td>
+	  <td>.374 (NaiveBay)</td>
+	</tr>
+	<tr>
+	  <td>Shuttle control</td>
+	  <td>7.</td>
+	  <td>0.10%</td>
+	  <td>0.01% (NewId)</td>
+	</tr>
+      </table>
+      <p> 
+	First three of the data sets had mostly discrete input data, while fourth
+	contained mainly numerical input. In the three data sets with mostly 
+	discrete input, the re-expression+naive Bayesian combo provided 
+	the best results. Re-expression technique improved naive Baysian results
+	significantly in the discrete data-sets and dramatically for Shuttle 
+	Control by dropping error rate by 30x as visible in following graphs.
+	In graphs smaller threshold means higher level of re-expression, while 
+	for entropy, cost and error smaller is better. In German credit, 
+	entropy wasn't the StatLog metric, but it's interesting as the
+	best measure for the underlying probability estimate. Results are
+	for both test and train data sets; where test is interesting data set
+	and test/train split follows StatLog instructions. 
+      </p>
+      <table width="100%">
+	<tr>
+	  <td><img src="german credit entropy.png"/></td>
+	  <td><img src="australian credit error.png"/></td>
+	</tr>
+	<tr>
+	  <td><img src="heart disease cost.png"/></td>
+	  <td><img src="shuttle control error.png"/></td>
+	</tr>
+      </table>
+      <p>
+	The graphs here show how various metrics behave, when threshold
+	parameter varies. On the right corner of graph there is typically
+	the result for plain naive Bayes, while on the left side of graph there 
+	are results for naive Bayes working on heavily re-expressed data. 
+	While re-expression typically helps, too heavy re-expressing
+	will raise granularity of the data too high and lead to
+	undesirable overfitting thus harming the results. What is also 
+	visible in the diagrams is that while entropy of predicted variable
+	(see german credit) reduces quite continuously, the cost and error
+	rates may go quite dramatically up and down as re-expression proceeds. 
+	This contradicting looking situation is caused by the classification
+	not minding redundancy as long positive and negative evidense is 
+	duplicated as many times. If re-expression eliminates duplication
+	indicating A, then also duplication indicating B needs to be 
+	eliminated to bring algorithm back to balance. 
+      </p>      
+      <p>Next graphs demonstrate the algorithm's speed:</p>
+      <table width="100%">
+	<tr>
+	  <td><img src="heart disease prediction ns.png"/></td>
+	  <td><img src="shuttle control prediction ns.png"/></td>
+	</tr>
+      </table>
+      <p>
+	Previous images show how the prediction times behave, when the 
+	system gets re-expressed. In german credit, australian credit
+	and heart disease samples the prediction speed with re-expressed data 
+	stays in the magnitude of plain naive Bayesian predictor. 
+	If data is heavily re-expressed, prediction speed may take even twice the
+	time, but per sample the speed remains around 10 microseconds, more or
+	less. As shuttle control data gets re-expressed with much heavier hand, 
+	the performance impact is also much bigger, varying between 0.3 ms 
+	- 32 us depending of threshold. The learning of re-expression for 
+	optimal results took 17 ms for german credit, 92 ms for australian 
+	credit, 150ms for heart and 4 seconds for shuttle control. Transforming
+	other data into formed expression is around 50-1000 times faster. 
+	Measurements, were done on a single processor of 1.3 Ghz Pentium M 
+	netbook. 
+      </p>
+      <h2>Images and image classification (image, optdigits test suites)</h2>
+      <p>
+	So, re-expression technique does give major boost to naive Bayesian 
+	classifier in more traditional machine learning problems. But how 
+	does the algorithm work with different kind of data, like images. 
+	Here I'll present two problem settings, where first is about parsing
+	an image into its graphical primitives.
+      </p>
+      <p>In the first problem setting, we have a screenshot of the classic 
+	game 'Space Invaders', shown left. Here learning 108 expressions 
+	from the 54k pixels took 3.7 seconds. The expressions were sorted based
+	on how many of them were found in the image and that how much information 
+	they carry and the picture on the right visualizes the top 15 expressions
+	from that list. For each shown expression exists a bit vector showing 
+	the exact locations, where the monsters, ships or letters are present in 
+	the image. Because re-expressing is extremely fast once the new 
+	expression has been learned, the technique could be used out-of-box
+	for parsing real-time stream of Space Invaders' pixels, or parsing
+	the pixels out of similar old game classics. 
+      </p>
+      <table width="100%">
+	<tr>
+	  <td><img src="invaders.bmp"/></td>
+	  <td><img src="invaders exps.png" width="300" height="250"/></td>
+	</tr>
+      </table>
+      <p>The second problem setting combines pattern recognition in images
+	with classic machine learning. The data set 'Optical Recognition of
+	Handwritten Digits' is from UCI machine learning repository, where
+	there are 32x32 bit images of hand written digits. The set is split
+	into few sets, of which we use train set of 1934 images and validation
+	set of 946 images. The image on left shows how classification accuracy
+	behaves, when more expressions are added. It is worth noting that the
+	algorithm doesn't utilize the location information for pixels. The 
+	naive version of classification therefore merely counts pixels and
+	tries to deduce class by pixel count, which results meager 14% 
+	accuracy. Once expression count is raised to 80, the accuracy raises
+	to 0.650, which isn't very impressive, but it shows that out-of-box 
+	re-expression mechanism does its job. Results would likely greatly
+        improve, if location information was taken into account. Image on right
+        visualizes how digits are parsed into primitive shapes that are 
+	then used to predict the digit based on statistics.</p>
+      <table width="100%">
+	<tr>
+	  <td><img src="optical digits accuracy.png"/></td>
+	  <td><img src="optical digits reexpressed images.png" width="300" height="320"/></td>
+	</tr>
+      </table>
+      <h2>Generic tests for machine learning (vars test suite)</h2>
+      <p>
+	In vars test suite, there are separate tests for simplistic AND, OR and 
+	XOR relationships,
+	but even further there are test cases, where input-to-input variable
+	and input-to-output variable dependencies are each randomized based on 
+	configurable average dependencies. This rather generic test setting 
+	is useful for testing some core assumptions of the re-expression technique
+	tat are 1) elimination of redundancy reduces bias thus improving
+	naive Bayesian results and 2) re-expression+naive Bayesian combo provides
+	valid probabilities that can be treated as probabilities. Even futher we 
+	would like to know, whether the estimated probabilities converge to 
+	the real probabilities given enought data. 
+     </p>
+     <p>
+        Because we are trying to estimate accuracy of probabilties, we measure
+	the results with a version Shannon's information entropy, which measures in how many bits the 
+	variable can be encoded on average using the estimated probabilities. As 
+	we know the system generating the information, we can calculate also 
+	'ideal entropy' that is the best possible result (lower is better) and 
+	what we might call 'variable naive entropy', which is based on the 
+	variable states alone ignoring the input data. Difference between these 
+	values describe that how much information input variables contain of the 
+	predicted variable. In the test setting there was 64 input variables
+	with varying average dependency and up to 4096 trained samples. The
+	results are based on 200 predictions on 20 different randomly generated 
+	systems for each threshold and sample count combination.
+      </p>
+      <table width="100%">
+	<tr>
+	  <td><img src="dists 64 var entropies.png"/></td>
+	  <td><img src="dists 64 var estimate entropy plot.png"/></td>
+	  <td><img src="dists 64 var entropy delta.png"/></td>
+	</tr>
+      </table>
+      <p>
+	The tables and images demonstrate well the pathological behavior
+	of the naive Bayesian inference, when input variables are dependent. 
+	Even with smallest measured redundancy (ldep=0.2) in input, 
+	the naive bayesian inferences performs worse (0.608) than the naive 
+	estimate (0.576) that simply ignores entire input. The fact that naive
+	Bayesian inference provides garbage with even smaller redundancy explains
+	why method is generally not used for estimating probabilities, but 
+	instead as a classifier. As input variables get more redundant, the naive 
+	Bayesian biases and probabilities become even wilder, while the behavior 
+	is completely different if data is re-expressed. If re-expression is 
+	applied, the probabilities are informative and even accurate. Even 
+	further the difference between estimate based and ideal entropy does not
+	greatly depend of ldep indicating that the re-exression aided predicting 
+	works regardless of redundancy in input. 
+      </p>
+      <p>
+	The results do give indication, that the probability estimates for 
+	re-expression supported predictor would converge towards the ideal, in 
+	the case of our test. While the testing does not progress far
+        enought to really verify or falsify this claim, even if the results do 
+	consistently improve up to 4096 samples, the resuls make it obvious
+	that with enought samples the provided probabilities are real 
+	probabilities and even pretty accurate probabilities and they can be 
+	treated as such. Of course, the amount of the required samples to reach 
+	this desirable condition varies depending of variable count, redundancy 
+	in the system and the threshold. 
+      </p>
+      <h2>Language learning and world learning (text, rooms test suites)</h2>
+      <p>
+	There are several other test cases in the re-expression library's
+	test suite, which may not be super-impressive, but which are interesting
+	anyway. One reason, why all tests are not very impressive has been simply
+	the lack of time in creating more challenging and complete test cases.
+	Another reason as in case of 'rooms' is the inherent complexity in the 
+	data. Few test cases in 'text' test suite is around learning grammar 
+	for very simplistic pieces of text and finding correct classification
+	(bear or pirate). Another test case has generated text and the problem
+	is detecting the class of the text generator. Still, the test cases are 
+	somewhat unimpressive as they are very simplistic and even trivia. 
+      </p>
+      <p>
+	There is also another complete different kind of test called 'rooms',
+	which deals with playing histories of very a simplistic game, where the
+	player needs to escape from dungeon with one to two room and with 5x5
+	view of the surrounding map tiles. In a way, the problem is the problem
+	of modeling 1) the entire game world 2) decisions 3) heuristics (goals 
+	and how to achieve them) and 4) relationships between these things. In this
+	way, the rooms problem is the McCarthy's epistomological (world modeling) 
+	problem in miniature form. The data is organized into 4 dimension space 
+	(game, turn, x, y) and it contains information around tiles (is wall, 
+	light, stair), decisions and heuristics (game won). The relationships 
+	between variables make it possible to detect shapes that are 3 dimensional
+	and between various variables. In principle, patterns of isWall(g, t, x, y)
+	AND moveLeft(g, t) AND isWall(g, t+1, x+1, y) can be detected throught
+	relationships and these patterns would function to detect 1) how the
+	world works 2) what leads to victory and 3) behavioral routines in general
+	and in certain conditions. At some level the intended kind of learning 
+	does occur, but the results are mixed and not very impressive. The 
+	most impressive part is merely that the language of variables, 
+	context vector and relationships is pretty powerful in describing
+	'nethack' kind of worlds, the engine is able to consume the 200 
+	games with 20 turns, 25 pixels and tens of variables and learn 
+	some patterns in few ten seconds. Still, while the techniques
+	and test cases can be - with no doubt - improved: right now the 
+	test setting does not provide useful results.
+      </p>
+    </div>
+
+  </body>
+
+
+</html>
