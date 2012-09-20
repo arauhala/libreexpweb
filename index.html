@@ -267,12 +267,16 @@
 	<tr><td><b>Data-set</b></td>
 	    <td><b>Statlog Rank</b></td>
 	    <td><b>Result</b></td>
+	    <td><b>(Alt. Result)</b></td>
 	    <td><b>Statlog's Best</b></td></tr>
 	<tr>
 	  <td>German credit data</td>
 	  <td>1.</td>
 	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/germancredit_exps_noundef_exp.txt">
 	      .516
+	  </a></td>
+	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/germancredit_exps_noundef_b_exp.txt">
+	      (.496)
 	  </a></td>
 	  <td>.541 (Discrim)</td>
 	</tr>
@@ -282,6 +286,9 @@
 	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/australian_exps_exp.txt">
 	    .128
           </a></td>
+	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/germancredit_exps_noundef_b_exp.txt">
+	      (.128)
+	  </a></td>
 	  <td>.131 (Cal5)</td>
 	</tr>
 	<tr>
@@ -289,6 +296,9 @@
 	  <td>1.</td>
 	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/heart_exps_noundefs_exp.txt">
 	    .344
+	  </a></td>
+	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/heart_narrowexps_noundefs_b_exp.txt">
+	    (.341/.319)
 	  </a></td>
 	  <td>.374 (NaiveBay)</td>
 	</tr>
@@ -298,9 +308,13 @@
 	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/statlog_shuttle_exps_noundef_exp.txt">
 	      0.10%
 	  </a></td>
+	  <td><a href="https://github.com/arauhala/libreexp/blob/master/test/statlogbits/statlog_shuttle_exps_noundef_exp.txt">
+	      0.21%
+	  </a></td>
 	  <td>0.01% (NewId)</td>
 	</tr>
       </table>
+      <i>(Alt.Results are for the alternative probabilistic prediction algorithm tried)</i>
       <p> 
 	First three of the data sets had mostly discrete input data, while fourth
 	contained mainly numerical input. In the three data sets with mostly 
@@ -414,6 +428,18 @@
 	  <td><img src="optical digits reexpressed images.png" width="300" height="320"/></td>
 	</tr>
       </table>
+      <p>
+	Because the problem setting of previous test case is quite excotic, 
+	it doesn't provide good or comparable results for the optdigits data sets. 
+	More comprarable test case was also created, which results can be found from 
+	<a href="https://github.com/arauhala/libreexp/blob/master/test/optdigits/o2_exps_exp.txt">here</a>. While the results of this data set are neither super impressive, the plain
+	naive bayesian did provide error rate of 0.103 and re-expression did drop the 
+	error to 0.055 (with 500 expressions), which means 47% reduction in error. In 
+	this way, the used naive Bayesian provided comparable rates to naive Bayesian
+	results found in public and re-expression technique did provide major improvement 
+	in results, even if KNN and decision trees can apparently deliver much better 
+	results for the data. 
+      </p>
       <h2>Generic tests for machine learning (vars test suite)</h2>
       <p>
 	In vars test suite, there are separate tests for simplistic AND, OR and 
@@ -430,7 +456,8 @@
      </p>
      <p>
         Because we are trying to estimate accuracy of probabilties, we measure
-	the results with a version Shannon's information entropy, which measures in how many bits the 
+	the results with a version Shannon's information entropy, which measures
+	in how many bits the 
 	variable can be encoded on average using the estimated probabilities. As 
 	we know the system generating the information, we can calculate also 
 	'ideal entropy' that is the best possible result (lower is better) and 
@@ -487,8 +514,12 @@
 	data. Few test cases in 'text' test suite is around learning grammar 
 	for very simplistic pieces of text and finding correct classification
 	(bear or pirate). Another test case has generated text and the problem
-	is detecting the class of the text generator. Still, the test cases are 
-	somewhat unimpressive as they are very simplistic and even trivia. 
+	is detecting the class of the text generator. Third test case treated
+	simply the lang.h file found among the sources and the recognized
+	tokens of the code can be found in 
+	<a href="https://github.com/arauhala/libreexp/blob/master/test/text/code_exp.txt">
+	  here
+	</a>
       </p>
       <p>
 	There is also another complete different kind of test called 'rooms',
