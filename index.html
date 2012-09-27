@@ -94,43 +94,46 @@
       <p>
 	Problems define solutions and to be able
 	to define more generic algorithm you need to first define more generic 
-	problem. Also, there's need to change the approach with problem settings
-	entirely, as the primary aim will not be to classify anything, or 
-	predict anything, detect patterns or compress anything, but instead 
-	find a generic method, that unifies these aims.
+	problem. Also, there's need to change the approach with problem 
+	settings entirely, as the primary aim will not be to classify 
+	anything, or predict anything, detect patterns or compress anything,
+	but instead find a generic method, that unifies these aims.
       </p>
       <p>
 	Instead, the new grander problem is in finding optimal mechanism for
-	transforming information I into new improved expression I' that contains 
-	the same information. As a side-effect a number of operations on the 
-	data should become 1) trivial 2) fast and 3) more effective. Here 
-	effectiveness means that probability estimation provides better 
+	transforming information I into new ideal expression I' that
+	contains the same information. As a side-effect a number of operations
+	on the data should become 1) trivial 2) fast and 3) more effective. 
+	Here effectiveness means that probability estimation provides better 
 	estimates, compression provides better compression rates, 
 	classifier better classifications and so forth. 
       </p>
       <p>
-	Now the grand question is what the idea of ideal expression actually 
-	means, what are the very desirable qualities of ideal expression, and is
-	such expression even possible to achieve? Regarding the desired qualities -
-	based on Rissanen minimum entropy principle - the information/model should
-	have minimized entropy. Another desired quality is maximum independence of 
-	the variables in the information expression, as under independence
-	assumption simplistic compression and naive Bayesian methods do provide 
-	ideal compression rates and estimates with ideal performance. Even 
-	further, the two qualities around entropy and independence can be 
-	optimized via minimizing a single metric called 'naive entropy, which is
-	the sum of expression's variables' entropies' H_n(I) = H(V_1) + H(V_2) +
-	... . Minimizing the naive entropy minimizes entropy of the
-	compressed model, while the naive entropy reaches true entropy only, if
-	variables reach independence. 
+	Now the grand question is what this concept of ideal expression 
+	actually means, what are the very desirable qualities of ideal
+	expression, and is such expression even possible to achieve? Regarding 
+	the desired qualities - based on Rissanen minimum entropy principle -
+	the information/model should have minimized entropy. Another desired 
+	quality is maximum independence of the variables in the information 
+	expression, as under independence assumption simplistic compression
+	and naive Bayesian methods do provide ideal compression rates and 
+	ideal estimates with ideal performance. Even further, the two 
+	qualities around entropy and independence can be optimized via 
+	minimizing a single metric called 'naive entropy, which is
+	the sum of expression's variables' entropies' H<sub>n</sub>(I) = 
+	H(V<sub>1</sub>) + H(V<sub>2</sub>) + ... + H(V<sub>k</sub>). 
+	Minimizing the naive entropy minimizes entropy of the
+	compressed model, while the naive entropy reaches true entropy only, 
+	if variables reach independence. 
       </p>
       <h2>The abstract solution</h2>
       <p>
 	If we split information I into two parts, which are language L and 
-	data so that I = (L, D), we can reframe the problem as finding
-	optimal language learner l, so that it provide optimal language 
-	L' = l(L, D) and that the new optimal expression I' = (L', D') has 
-	minimized naive entropy H_n(I') = H_n(L') + H_n(D'). 
+	data D so that I = (L, D), we can reframe the problem as finding
+	optimal language learner &lambda;, so that it provide optimal language 
+	L' = &lambda;(L, D) and that the new optimal expression I' = (L', D') 
+	has minimized naive entropy H<sub>n</sub>(I') = H<sub>n</sub>(L') + 
+	H<sub>n</sub>(D').
       <p> 
 	The abstract solution is following:
       </p>
@@ -139,8 +142,8 @@
 	<li>Find a condition C in data that is suprisingly common</li>
 	<li>Form a expression variable E that's true when condition C is true</li>
 	<li>Add expression variable E into expression. This introduce redundancy, as variable E predicts unambigiously existing variables' states</li>
-	<li>Eliminate the redundancy by eliminating predicted states from expression. This creates new generation of information I_i+1.</li>
-	<li>Repeat the process from step 1. for I_i+1</li>
+	<li>Eliminate the redundancy by eliminating predicted states from expression. This creates new generation of information I<sub>i+1</sub>.</li>
+	<li>Repeat the process from step 1. for I<sub>i+1</sub></li>
       </ol>
       <p> 
 	As patterns are eliminated from data they get captured in the language,
@@ -158,7 +161,7 @@
       <ul>
 	<li>All variables and states are binary (e.g. isPixelBlack)</li>
 	<li>Variables are iterated via context variables, that are vectors of integers, and variables have state for each defined context. <ul><li>E.g. context variable Pixel has states (0, 1), (0, 2), ..., (99, 99) and e.g. isPixelBlack((10,10))=true. </li></ul></li>
-	<li>Relations R_1, R_2, ..., R_m are used to organize variables and to detect patterns. Relations are of form R(t) = (V_i(t + s_i), V_j(t + s_j), ...,  V_k(t + s_k)), where t is context variable state and s_i, ..., s_k are shift vectors, that translate context variable. <ul><li>E.g. leftRight(t) = (isPixelBlack(t), isPixelBlack(t + (1,0))) could have value leftRight((10, 10)) = (isPixelBlack((10, 10)), isPixelBlack((11, 10))) = (true, true). </li></ul></li>
+	<li>Relations R<sub>1</sub>, R<sub>2</sub>, ..., R<sub>m</sub> are used to organize variables and to detect patterns. Relations are of form R(t) = (V<sub>i</sub>(t + s<sub>i</sub>), V<sub>j</sub>(t + s<sub>j</sub>), ...,  V<sub>k</sub>(t + s<sub>k</sub>)), where t is context variable state and s<sub>i</sub>, ..., s<sub>k</sub> are shift vectors, that translate context variable. <ul><li>E.g. leftRight(t) = (isPixelBlack(t), isPixelBlack(t + (1,0))) could have value leftRight((10, 10)) = (isPixelBlack((10, 10)), isPixelBlack((11, 10))) = (true, true). </li></ul></li>
 	<li>
 	  Statistics are gathered per variable and per relation, and they are used to estimate probabilities and statistical dependencies. 
 	  <ul>
@@ -166,13 +169,13 @@
 	    <li>Statistics may provide e.g. following probabilities for each 4 relation leftRight states: p(leftRight = (true, true))=0.4 and p(leftRight = (false, false)) = 0.5, while other states are present only 10% of time.</li></ul>
 	</li>
 	<li>
-	  For each of the relationship's R state r = (v_1, v_2, ..., v_n), we calculate metric called bias B(r) = n(log (p(v_1) p(v_2) ... p(v_3)) - log p(r)), which is used to detect patterns that break independence assumption.
+	  For each of the relationship's R state r = (v<sub>1</sub>, v<sub>2</sub>, ..., v<sub>n</sub>), we calculate metric called bias B(r) = n(log (p(v<sub>1</sub>) p(v<sub>2</sub>) ... p(v<sub>k</sub>)) - log p(r)), which is used to detect patterns that break independence assumption.
 	</li>
 	<li>
-	  We scan all relationships' R_1, R_2, ..., R_n states' r_1, r_2, ..., r_m bias values, and pick the relationship R_i state r_j with highest bias B(r_i) as the pattern to eliminate via new expression variable E.
+	  We scan all relationships' R<sub>1</sub>, R<sub>2</sub>, ..., R<sub>n</sub> states' r<sub>1</sub>, r<sub>2</sub>, ..., r<sub>m</sub> bias values, and pick the relationship R<sub>i</sub> state r<sub>j</sub> with highest bias B(r<sub>i</sub>) as the pattern to eliminate via new expression variable E.
 	<ul>
-	  <li>If the highest variable has bias under some threshold T, the process is stopped. </li>
-	  <li>For the expression variable E it applies that E(t) = true, iff R_i(t) = r_j. E.g. we may have expression variable E(t) that is true, iff leftRight(t)=(true, true)	
+	  <li>If the highest state combination r<sub>j</sub> bias B(r) is under some threshold T, the process is stopped. </li>
+	  <li>For the expression variable E it applies that E(t) = true, iff R<sub>i</sub>(t) = r<sub>j</sub>. E.g. we may have expression variable E(t) that is true, iff leftRight(t)=(true, true)	
 	  </li>
 	</ul>
 	</li>
@@ -187,7 +190,7 @@
 	  </li>  
 	</ul>
 	  <li>The elimination process is called 'variable reduction process' and it creates variables, which states are eliminated in some contexts and which have different statistical properties than their original versions. The eliminated states are ignored, when building statistics, compressing, classifying or predicting as they are already taken into account via expression variable E. 
-	    <ul><li>E.g. Reduced isPixelBlack is different from original isPixelBlack as it has fewer states and relatively fewer of these states are true</li></ul>  </li>
+	<ul><li>E.g. Reduced isPixelBlack is different from original isPixelBlack as it has fewer states and relatively fewer of these states are true</li></ul></li>
 	</ul>
       <p>
 	The C++ implementation has also naive Bayesian probability predicter
@@ -217,27 +220,27 @@
 	Still, the solution could be improved in many curious ways. First of 
 	all, by varying the way how the original expression of information is 
 	defined, you can cover either small set of problems (machine learning, 
-	languages), a big set (current solution) or even a bigger range of problem
-	settings, what-ever they may be. This is one level of problem, 
-	the low-level information representation. Another level relates relations
-	and expressions or what patterns we can express and how. Current 
-	mechanism can only express AND relation between variable states, while 
-	OR-like expression is obviously possible. It also seems plausible that 
-	some kind of recusion could be learned, where recursion is needed for 
-	learning context-free-grammars. One can imagine what context-free-grammars
-	would look like for e.g. images or video. Still, for the re-expression 
-	to actually reduce naive entropy of information, one needs to have 
-	statistics to detect the patterns and devise a bullet-proff reduction 
-	mechanisms for given expression. Statistics and reduction thus 
-	form third and fourth levels of re-expression problem. Fifth level of
-	the problem relate to optimizations, like sparse data optimization, which 
-	could take the algorithm speed even to another level and parallelization
-	which should be somewhat easy to apply to e.g. heavy operations with 
-	statistics. The last level of the problem relate to how statistics are 
-	used for probability estimation. While re-expression allows simplistic 
-	operations to perform well with data, even these simplistic operations 
-	could be greatly improved by developing the mathematics behind the 
-	operations.
+	languages), a big set (current solution) or even a bigger range of 
+	problem settings, what-ever they may be. This is one level of problem, 
+	the low-level information representation. Another level relates 
+	relations and expressions or what patterns we can express and how.
+	Current mechanism can only express AND relation between variable 
+	states, while OR-like expression is obviously possible. It also seems 
+	plausible that some kind of recusion could be learned, where recursion
+	is needed for learning context-free-grammars. One can imagine what 
+	context-free-grammars would look like for e.g. images or video. Still,
+	for the re-expression to actually reduce naive entropy of information,
+	one needs to have statistics to detect the patterns and devise a 
+	bullet-proff reduction mechanisms for given expression. Statistics 
+	and reduction thus form third and fourth levels of re-expression 
+	problem. Fifth level of the problem relate to optimizations, like 
+	sparse data optimization, which could take the algorithm speed even 
+	to another level and parallelization which should be somewhat easy to 
+	apply to e.g. heavy operations with statistics. The last level of the 
+	problem relate to how statistics are used for probability estimation. 
+	While re-expression allows simplistic operations to perform well with 
+	data, even these simplistic operations could be greatly improved by 
+	developing the mathematics behind the operations.
       </p>
       <h2>About Author</h2>
       <p>
@@ -316,18 +319,19 @@
       </table>
       <i>(Alt.Results are for the alternative probabilistic prediction algorithm tried)</i>
       <p> 
-	First three of the data sets had mostly discrete input data, while fourth
-	contained mainly numerical input. In the three data sets with mostly 
-	discrete input, the re-expression+naive Bayesian combo provided 
-	the best results. Re-expression technique improved naive Baysian results
-	significantly in the discrete data-sets and dramatically for Shuttle 
-	Control by dropping error rate by 30x as visible in following graphs.
-	In graphs smaller threshold means higher level of re-expression, while 
-	for entropy, cost and error smaller is better. In German credit, 
-	entropy wasn't the StatLog metric, but it's interesting as the
-	best measure for the underlying probability estimate. Results are
-	for both test and train data sets; where test is interesting data set
-	and test/train split follows StatLog instructions. 
+	First three of the data sets had mostly discrete input data, while 
+	fourth contained mainly numerical input. In the three data sets with 
+	mostly discrete input, the re-expression+naive Bayesian combo provided 
+	the best results. Re-expression technique improved naive Baysian 
+	results significantly in the discrete data-sets and dramatically for 
+	Shuttle Control by dropping error rate by 30x as visible in following 
+	graphs. In graphs smaller threshold means higher level of 
+	re-expression, while for entropy, cost and error smaller is better. 
+	In German credit, entropy wasn't the StatLog metric, but it's 
+	interesting as the best measure for the underlying probability 
+	estimate. Results are for both test and train data sets; where test 
+	is interesting data set and test/train split follows StatLog 
+	instructions. 
       </p>
       <table width="100%">
 	<tr>
@@ -390,14 +394,14 @@
       <p>In the first problem setting, we have a screenshot of the classic 
 	game 'Space Invaders', shown left. Here learning 108 expressions 
 	from the 54k pixels took 3.7 seconds. The expressions were sorted based
-	on how many of them were found in the image and that how much information 
-	they carry and the picture on the right visualizes the top 15 expressions
-	from that list. For each shown expression exists a bit vector showing 
-	the exact locations, where the monsters, ships or letters are present in 
-	the image. Because re-expressing is extremely fast once the new 
-	expression has been learned, the technique could be used out-of-box
-	for parsing real-time stream of Space Invaders' pixels, or parsing
-	the pixels out of similar old game classics. 
+	on how many of them were found in the image and that how much 
+	information they carry and the picture on the right visualizes the 
+	top 15 expressions from that list. For each shown expression exists a 
+	bit vector showing the exact locations, where the monsters, ships or
+	letters are present in the image. Because re-expressing is extremely 
+	fast once the new expression has been learned, the technique could be 
+	used out-of-box for parsing real-time stream of Space Invaders' 
+	pixels, or parsing the pixels out of similar old game classics. 
       </p>
       <table width="100%">
 	<tr>
@@ -522,27 +526,32 @@
 	</a>
       </p>
       <p>
-	There is also another complete different kind of test called 'rooms',
-	which deals with playing histories of very a simplistic game, where the
+	There is also one complete different kind of test called 'rooms',
+	which deals with a very simplistic game, where the
 	player needs to escape from dungeon with one to two room and with 5x5
-	view of the surrounding map tiles. In a way, the problem is the problem
+	view of the surrounding map tiles. The data set consist of logs of
+	200 games of up to 20 turns with variables describing the game end
+	result, turn situation and the 25 visible tiles. The goal is to
+	model the consequence of decisions and that what kind game situation 
+	predicts victory. In a way, the problem is the problem
 	of modeling 1) the entire game world 2) decisions 3) heuristics (goals 
-	and how to achieve them) and 4) relationships between these things. In this
-	way, the rooms problem is the McCarthy's epistomological (world modeling) 
-	problem in miniature form. The data is organized into 4 dimension space 
-	(game, turn, x, y) and it contains information around tiles (is wall, 
-	light, stair), decisions and heuristics (game won). The relationships 
-	between variables make it possible to detect shapes that are 3 dimensional
-	and between various variables. In principle, patterns of isWall(g, t, x, y)
-	AND moveLeft(g, t) AND isWall(g, t+1, x+1, y) can be detected throught
-	relationships and these patterns would function to detect 1) how the
-	world works 2) what leads to victory and 3) behavioral routines in general
-	and in certain conditions. At some level the intended kind of learning 
+	and how to achieve them) and 4) relationships between these things. 
+	In this way, the rooms problem is the McCarthy's epistomological 
+	problem in a miniature form. The data is organized into 4 dimension 
+	space (game, turn, x, y) and it contains information around tiles 
+	(is wall, light, stair), decisions and utility value (game won). The 
+	relationships between variables make it possible to detect shapes 
+	that are 3 dimensional (time*x*y) and associate these with the many 
+	variables. In principle, patterns of isWall(g, t, x, y) AND moveLeft(g, t) AND 
+	isWall(g, t+1, x+1, y) can be detected throught relationships and 
+	these patterns would work to detect 1) how the world works 2) what 
+	leads to victory and 3) behavioral routines in general and in certain
+	conditions. At some level the intended kind of learning 
 	does occur, but the results are mixed and not very impressive. The 
-	most impressive part is merely that the language of variables, 
-	context vector and relationships is pretty powerful in describing
-	'nethack' kind of worlds, the engine is able to consume the 200 
-	games with 20 turns, 25 pixels and tens of variables and learn 
+	most impressive part is merely how potent the language of variables, 
+	context vector and relationships is in describing 'nethack' kind of 
+	worlds and that the engine is able to consume the 200 
+	games of up to 20 turns, 25 pixels and tens of variables and learn 
 	some patterns in few ten seconds. Still, while the techniques
 	and test cases can be - with no doubt - improved: right now the 
 	test setting does not provide useful results.
