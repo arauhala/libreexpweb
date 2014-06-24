@@ -74,42 +74,14 @@
     <h1>Re-expression method</h1>
     <div class="left">
       <p><i>
-	  This article re-defines problem setting for artifical learning
-	  in order to unite various disciplines of algorithmic learning under
-	  same domain. It also introduces a high performing solution to this 
-	  very problem, that can beat machine learning algorithms on their 
-	  home field, while also detecting patterns in text, images and
-	  in arbitrary combinations of ordered and free variables. 
+      Re-expression method is a representation learning method generalized from on a simplistic grammar learning algorithm. The algorithm drives minimum description length (MDL), forces independence of variables and exposes patterns as variables by minimizing description length under independence assumption. In tests the method improved naive Bayesian classification results significantly and the method enabled informative probability estimates with naive Bayesian inference. For example in the Shuttle Control data set the re-expression reduced naive Bayesian error by 97\%. Method was used successfully to extract shapes from images and tokens from text, and re-expression of such shapes improved results in naive Bayesian probability inference. 
       </i></p>
-      <h2>The grand question</h2>
-      <p>
-	How to make algorithmic learning more generic and powerful? We have 
-	plently of algorithms, but they tend to lack the single quality we 
-	so preciate in the human brain: the ability to manage the 
-	widest variety of problems in a generic and effective way.
-	So how to devise a more generic learning method, and how to keep it
-	high performing and powerful?
-      </p>
       <h2>The re-expression problem</h2>
       <p>
-	Problems define solutions and to be able
-	to define more generic algorithm you need to first define more generic 
-	problem. Also, there's need to change the approach with problem 
-	settings entirely, as the primary aim will not be to classify 
-	anything, or predict anything, detect patterns or compress anything,
-	but instead find a generic method, that unifies these aims.
-      </p>
+Solutions are defined by their problems and the re-expression method is defined by the goal of converting a representation into a more ideal form. In the re-expression problem, the aim is to find for information representation I a more ideal representation I' so that operations on the representation provide more ideal results. 
       <p>
-	Instead, the new grander problem is in finding optimal mechanism for
-	transforming information I into new ideal expression I' that
-	contains the same information. As a side-effect a number of operations
-	on the data should become 1) trivial 2) fast and 3) more effective. 
-	Here effectiveness means that probability estimation provides better 
-	estimates, compression provides better compression rates, 
-	classifier better classifications and so forth. 
-      </p>
-      <p>
-	Now the grand question is what this concept of ideal expression 
+	To be able to convert this abstract problem setting into a more formal
+and exact form, following questions need to be answered: what an ideal expression 
 	actually means, what are the very desirable qualities of ideal
 	expression, and is such expression even possible to achieve? Regarding 
 	the desired qualities - based on Rissanen minimum description length -
@@ -119,12 +91,12 @@
 	and naive Bayesian methods do provide ideal compression rates and 
 	ideal estimates with ideal performance. Even further, the two 
 	qualities around entropy and independence can be optimized via 
-	minimizing a single metric called 'naive entropy, which is
+	minimizing a single metric, which we may call 'naive entropy, which is
 	the sum of expression's variables' entropies' H<sub>n</sub>(I) = 
 	H(V<sub>1</sub>) + H(V<sub>2</sub>) + ... + H(V<sub>k</sub>). 
 	Minimizing the naive entropy minimizes entropy of the
-	compressed model, while the naive entropy reaches true entropy only, 
-	if variables reach independence. 
+	compressed model, while this naive form of entropy reaches true entropy only, 
+	if the representation variables reach independence. 
       </p>
       <h2>The abstract solution</h2>
       <p>
